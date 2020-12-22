@@ -1,0 +1,4 @@
+Frontend
+node_modules
+yarn.lock
+.env
