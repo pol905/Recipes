@@ -10,7 +10,7 @@ const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs-extra");
 require("dotenv").config();
 
 let redisClient = redis.createClient({
@@ -50,6 +50,7 @@ app.use(express.urlencoded({ extended: true }));
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const uploadPath = path.join(__dirname, "/uploads");
+    fs.ensureDirSync(uploadPath);
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
