@@ -1,14 +1,19 @@
 const express = require("express");
 const signup = require("./api/signup");
 const login = require("./api/login");
+const addRecipe = require("./api/addRecipe");
 const whoami = require("./api/whoami");
 const session = require("express-session");
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+require("dotenv").config();
 
 let redisClient = redis.createClient({
   host: "localhost",
-  port: 6379,
+  port: process.env.REDIS_PORT,
 });
 
 redisClient.on("error", (err) => {
@@ -20,7 +25,7 @@ redisClient.on("connect", (err) => {
 });
 
 const app = express();
-const port = 3000;
+const port = process.env.EXPRESS_PORT;
 app.use(
   session({
     name: "sess",
@@ -32,13 +37,50 @@ app.use(
       sameSite: "lax",
     },
     saveUninitialized: false,
-    secret: "udhiewufhiwuefhiwuhiufhwiuehfiuh",
+    secret: process.env.SESSION_SECRET,
     resave: false,
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = path.join(__dirname, "/uploads");
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
+    );
+  },
+});
+let flag = 0;
+const fileTypeHandler = () => {
+  flag = 1;
+};
+
+const filefilter = (req, file, cb) => {
+  flag = 0;
+  if (
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpg"
+  ) {
+    cb(null, true);
+  } else {
+    cb(fileTypeHandler(), false);
+  }
+};
+const upload = multer({
+  fileFilter: filefilter,
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 5,
+  },
+});
 
 app.post("/v1/signup/", async (req, res) => {
   await signup(req.body, res);
@@ -50,6 +92,18 @@ app.post("/v1/login/", async (req, res) => {
 
 app.get("/v1/whoami/", async (req, res) => {
   await whoami(req.session, res);
+});
+
+app.post("/v1/addRecipe", upload.single("recipeImage"), async (req, res) => {
+  if (flag === 0) {
+    await addRecipe(req, res);
+  } else {
+    res.status(415).json({ Error: "only jpeg/jpg/png files are supported" });
+  }
+});
+
+app.get("/v1/getRecipe", async (req, res) => {
+  await getRecipes(req.session.userId);
 });
 
 app.listen(port, () => {
