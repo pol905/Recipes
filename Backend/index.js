@@ -3,6 +3,8 @@ const signup = require("./api/signup");
 const login = require("./api/login");
 const addRecipe = require("./api/addRecipe");
 const whoami = require("./api/whoami");
+const getRecipes = require("./api/getRecipes");
+const getRecipe = require("./api/getRecipe");
 const session = require("express-session");
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
@@ -102,8 +104,12 @@ app.post("/v1/addRecipe", upload.single("recipeImage"), async (req, res) => {
   }
 });
 
+app.get("/v1/getRecipes", async (req, res) => {
+  await getRecipes(req.session.userId, res);
+});
+
 app.get("/v1/getRecipe", async (req, res) => {
-  await getRecipes(req.session.userId);
+  await getRecipe(req.body.recipeId, res);
 });
 
 app.listen(port, () => {
