@@ -11,6 +11,7 @@ const RedisStore = require("connect-redis")(session);
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs-extra");
+const logout = require("./api/logout");
 require("dotenv").config();
 
 let redisClient = redis.createClient({
@@ -91,6 +92,10 @@ app.post("/v1/signup/", async (req, res) => {
 
 app.post("/v1/login/", async (req, res) => {
   await login(req, res);
+});
+
+app.post("/v1/logout/", (req, res) => {
+  logout(req.session.destroy()).then(res.send(200));
 });
 
 app.get("/v1/whoami/", async (req, res) => {
