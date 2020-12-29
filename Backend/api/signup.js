@@ -10,10 +10,10 @@ const signup = async ({ username, password, email }, res) => {
   let saved_user;
   try {
     saved_user = await user.save();
-    res.json(saved_user);
+    res.sendStatus(200);
   } catch (err) {
     console.error(err.message);
-    res.send("Invalid user already exists!");
+    res.sendStatus(409);
   }
 };
 module.exports = signup;

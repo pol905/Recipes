@@ -42,6 +42,7 @@ app.use(
     saveUninitialized: false,
     secret: process.env.SESSION_SECRET,
     resave: false,
+    unset: "destroy",
   })
 );
 
@@ -87,7 +88,7 @@ const upload = multer({
 });
 
 app.post("/v1/signup/", async (req, res) => {
-  await signup(req.body, res);
+  await signup(req.body.user, res);
 });
 
 app.post("/v1/login/", async (req, res) => {
@@ -95,7 +96,8 @@ app.post("/v1/login/", async (req, res) => {
 });
 
 app.post("/v1/logout/", (req, res) => {
-  logout(req.session.destroy()).then(res.send(200));
+  logout(req);
+  res.clearCookie("sess").sendStatus(200);
 });
 
 app.get("/v1/whoami/", async (req, res) => {

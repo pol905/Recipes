@@ -2,17 +2,16 @@ const argon = require("argon2");
 const User = require("../models/User");
 
 const login = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body.user;
   try {
     const user = await User.findOne({ username }).exec();
     if (user) {
       if (await argon.verify(user.password, password)) {
         req.session.userId = user._id;
-        res.send("Successfully signed in!");
-      } else {
-        res.send("Incorrect username/ password");
+        res.sendStatus(200);
       }
     }
+    res.sendStatus(401);
   } catch (err) {
     console.error(err);
   }
