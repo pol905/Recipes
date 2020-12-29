@@ -4,12 +4,25 @@ import about from "../assets/img/about.jpg";
 import home from "../assets/img/home.png";
 import ScrollReveal from "scrollreveal";
 import axios from "axios";
+import Login from "../Components/Login";
+import Logout from "../Components/Logout";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const theme = useTheme();
+  let size = useMediaQuery(theme.breakpoints.down("md"));
   useEffect(() => {
     async function getSession() {
-      console.log(await axios.get("/v1/whoami/"));
+      const cookie = await axios.get("/v1/whoami/");
+      if (cookie.data.username) {
+        {
+          setIsLoggedIn(true);
+        }
+      } else {
+        setIsLoggedIn(false);
+      }
     }
     getSession();
   }, []);
@@ -167,9 +180,7 @@ const Home = () => {
                 </a>
               </li>
               <li className="nav__item">
-                <a href="" className="nav__link">
-                  {isLoggedIn ? "Logout" : "Login"}
-                </a>
+                {isLoggedIn ? <Logout /> : <Login width={size} />}
               </li>
 
               <li>
