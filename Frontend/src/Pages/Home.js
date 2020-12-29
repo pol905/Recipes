@@ -8,6 +8,7 @@ import Login from "../Components/Login";
 import Logout from "../Components/Logout";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -179,6 +180,13 @@ const Home = () => {
                   Contact us
                 </a>
               </li>
+              {isLoggedIn ? (
+                <li className="nav__item">
+                  <Link to={{ pathname: "/recipes" }} className="nav__link">
+                    My Recipes
+                  </Link>
+                </li>
+              ) : null}
               <li className="nav__item">
                 {isLoggedIn ? <Logout /> : <Login width={size} />}
               </li>
