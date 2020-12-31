@@ -10,8 +10,9 @@ const login = async (req, res) => {
         req.session.userId = user._id;
         res.sendStatus(200);
       }
+    } else {
+      res.sendStatus(401);
     }
-    res.sendStatus(401);
   } catch (err) {
     console.error(err);
   }

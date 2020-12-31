@@ -3,19 +3,21 @@ const addRecipe = async (
   { file, session, body: { recipeName, ingredients, recipe } },
   res
 ) => {
-  const newRecipe = new Recipe({
+  const createRecipe = {
     recipeName: recipeName,
     userId: session.userId,
-    ingrdients: ingredients,
+    ingredients: ingredients,
     recipe: recipe,
     img: {
-      data: file.path,
+      data: file.filename,
       contentType: file.mimetype,
     },
-  });
-  console.log(session.userId);
+  };
+  console.log(createRecipe);
+  const newRecipe = new Recipe(createRecipe);
   try {
     await newRecipe.save();
+    console.log(newRecipe);
     res.send("Added Sucessfully");
   } catch (err) {
     res.send("Upload unsucessful");

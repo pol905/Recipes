@@ -14,6 +14,8 @@ const fs = require("fs-extra");
 const logout = require("./api/logout");
 require("dotenv").config();
 
+console.log(__dirname);
+
 let redisClient = redis.createClient({
   host: "localhost",
   port: process.env.REDIS_PORT,
@@ -29,6 +31,7 @@ redisClient.on("connect", (err) => {
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
+app.use(express.static(__dirname + "\\uploads"));
 app.use(
   session({
     name: "sess",
