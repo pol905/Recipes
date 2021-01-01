@@ -9,6 +9,8 @@ const login = async (req, res) => {
       if (await argon.verify(user.password, password)) {
         req.session.userId = user._id;
         res.sendStatus(200);
+      } else {
+        res.sendStatus(401);
       }
     } else {
       res.sendStatus(401);
