@@ -13,11 +13,9 @@ const addRecipe = async (
       contentType: file.mimetype,
     },
   };
-  console.log(createRecipe);
   const newRecipe = new Recipe(createRecipe);
   try {
     await newRecipe.save();
-    console.log(newRecipe);
     res.send("Added Sucessfully");
   } catch (err) {
     res.send("Upload unsucessful");

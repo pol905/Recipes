@@ -5,6 +5,7 @@ const addRecipe = require("./api/addRecipe");
 const whoami = require("./api/whoami");
 const getRecipes = require("./api/getRecipes");
 const getRecipe = require("./api/getRecipe");
+const deleteRecipe = require("./api/deleteRecipe");
 const session = require("express-session");
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
@@ -121,6 +122,10 @@ app.get("/v1/getRecipes", async (req, res) => {
 
 app.get("/v1/getRecipe", async (req, res) => {
   await getRecipe(req.body.recipeId, res);
+});
+
+app.post("/v1/deleteRecipe", async (req, res) => {
+  await deleteRecipe(req.body, res);
 });
 
 app.listen(port, () => {

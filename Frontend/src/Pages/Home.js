@@ -182,9 +182,9 @@ const Home = () => {
               </li>
               {isLoggedIn ? (
                 <li className="nav__item">
-                  <Link to={{ pathname: "/recipes" }} className="nav__link">
+                  <a href="/recipes" className="nav__link">
                     My Recipes
-                  </Link>
+                  </a>
                 </li>
               ) : null}
               <li className="nav__item">

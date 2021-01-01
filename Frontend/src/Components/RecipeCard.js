@@ -5,8 +5,10 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
+import ViewRecipe from "../Components/ViewRecipe";
+import TrashIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
-import EyeIcon from "@material-ui/icons/Visibility";
+import DeleteRecipe from "./DeleteRecipe";
 
 const useStyles = makeStyles({
   root: {
@@ -26,6 +28,7 @@ export default function RecipeCard(props) {
     recipe,
     img: { data, contentType },
   } = props.recipe;
+  const { setRecipes } = props;
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -49,9 +52,12 @@ export default function RecipeCard(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">
-          <EyeIcon style={{ color: "#212121" }} />
-        </Button>
+        <ViewRecipe recipe={props.recipe} />
+        <DeleteRecipe
+          recipeId={props.recipe._id}
+          recipeImageName={props.recipe.img.data}
+          setRecipes={setRecipes}
+        />
       </CardActions>
     </Card>
   );

@@ -143,11 +143,6 @@ export default function FormDialog() {
           {login ? "Login" : "Register"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            <a onClick={handleRegister}>
-              Click Here To {login ? "Register" : "Login"}
-            </a>
-          </DialogContentText>
           {login ? null : (
             <TextField
               error={error1}
@@ -193,6 +188,12 @@ export default function FormDialog() {
           />
         </DialogContent>
         <DialogActions>
+          <a
+            style={{ marginRight: login ? "4.5em" : "13em", color: "#393939" }}
+            onClick={handleRegister}
+          >
+            <u>Click Here To {login ? "Register" : "Login"} </u>
+          </a>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>

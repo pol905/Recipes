@@ -7,9 +7,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
+import LoadingButton from "@material-ui/lab/LoadingButton";
 import CameraIcon from "@material-ui/icons/PhotoCamera";
 import axios from "axios";
-import getRecipes from "../helpers/helper";
+import fetchRecipes from "../helpers/fetchRecipes";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -30,6 +31,15 @@ const useStyles = makeStyles((theme) => ({
 export default function CreateRecipe(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [pending, setPending] = React.useState(false);
+  const [error1, setError1] = React.useState(false);
+  const [error2, setError2] = React.useState(false);
+  const [error3, setError3] = React.useState(false);
+  const [imgSelected, setImageSelected] = React.useState(false);
+  const [msg1, setMsg1] = React.useState("");
+  const [msg2, setMsg2] = React.useState("");
+  const [msg3, setMsg3] = React.useState("");
+
   const { setRecipes } = props;
   const [newRecipe, setNewRecipe] = React.useState({
     recipeName: "",
@@ -49,22 +59,60 @@ export default function CreateRecipe(props) {
   const handleAddRecipe = async () => {
     const { recipeName, ingredients, recipe, recipeImage } = newRecipe;
     const formData = new FormData();
-    formData.append("recipeImage", recipeImage, recipeImage.name);
-    formData.append("recipeName", recipeName);
-    formData.append("recipe", recipe);
-    formData.append("ingredients", ingredients);
-    try {
-      await axios.post("/v1/addRecipe/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+    if (recipeName && ingredients && recipe && recipeImage) {
+      setError1(false);
+      setError2(false);
+      setError3(false);
+      setMsg1("");
+      setMsg2("");
+      setMsg3("");
+      setImageSelected(false);
+      setPending(true);
+      formData.append("recipeImage", recipeImage, recipeImage.name);
+      formData.append("recipeName", recipeName);
+      formData.append("recipe", recipe);
+      formData.append("ingredients", ingredients);
+      try {
+        await axios.post("/v1/addRecipe/", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } catch (err) {
+        alert(err.response.data);
+      }
+      const allRecipes = await fetchRecipes();
+      setRecipes(() => {
+        return [...allRecipes];
       });
-    } catch (err) {
-      alert(err.response.data);
+      setPending(false);
+      setOpen(false);
+    } else {
+      if (!recipeName) {
+        setError1(true);
+        setMsg1("Enter the name of the recipe");
+      } else {
+        setError1(false);
+        setMsg1("");
+      }
+      if (!ingredients) {
+        setError2(true);
+        setMsg2("Enter the ingredients");
+      } else {
+        setError2(false);
+        setMsg2("");
+      }
+      if (!recipe) {
+        setError3(true);
+        setMsg3("Enter the recipe");
+      } else {
+        setError3(false);
+        setMsg3("");
+      }
+      if (!recipeImage) {
+        setImageSelected(true);
+      } else {
+        setImageSelected(false);
+      }
     }
-    const allRecipes = await getRecipes();
-    setRecipes(() => {
-      return [...allRecipes];
-    });
-    setOpen(false);
   };
 
   return (
@@ -85,21 +133,27 @@ export default function CreateRecipe(props) {
         <DialogTitle id="form-dialog-title">Add New Recipe</DialogTitle>
         <DialogContent>
           <TextField
+            required
             autoFocus
             margin="dense"
             id="recipeName"
             label="Recipe Name"
             type="text"
+            error={error1}
+            helperText={msg1}
             fullWidth
             onChange={(e) =>
               setNewRecipe({ ...newRecipe, recipeName: e.target.value })
             }
           />
           <TextField
+            required
             id="outlined-textarea"
             label="Ingredients"
             placeholder="Enter the ingredients..."
             margin="dense"
+            error={error2}
+            helperText={msg2}
             fullWidth
             multiline
             onChange={(e) =>
@@ -107,9 +161,12 @@ export default function CreateRecipe(props) {
             }
           />
           <TextField
+            required
             id="outlined-textarea"
             label="Recipe"
             placeholder="Enter the recipe..."
+            error={error3}
+            helperText={msg3}
             fullWidth
             multiline
             onChange={(e) =>
@@ -136,16 +193,18 @@ export default function CreateRecipe(props) {
               Upload an Image
             </Button>
           </label>
+          {imgSelected ? null : <p>Image is required</p>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button
+          <LoadingButton
             endIcon={<AddIcon />}
+            pending={pending}
             variant="contained"
             onClick={handleAddRecipe}
           >
             Add
-          </Button>
+          </LoadingButton>
         </DialogActions>
       </Dialog>
     </div>

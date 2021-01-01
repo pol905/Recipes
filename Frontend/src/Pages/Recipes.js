@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { Grid } from "@material-ui/core";
 import RecipeCard from "../Components/RecipeCard";
 import Login from "../Components/Login";
@@ -8,7 +7,7 @@ import { Link } from "react-router-dom";
 import ScrollReveal from "scrollreveal";
 import { makeStyles } from "@material-ui/core/styles";
 import CreateRecipe from "../Components/CreateRecipe";
-import getRecipes from "../helpers/helper";
+import fetchRecipes from "../helpers/fetchRecipes";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -29,7 +28,7 @@ const Recipes = (props) => {
   const { isLoggedIn } = props;
   useEffect(() => {
     async function setAllRecipes() {
-      const allRecipes = await getRecipes();
+      const allRecipes = await fetchRecipes();
       setRecipes(() => {
         return [...allRecipes];
       });
@@ -165,7 +164,7 @@ const Recipes = (props) => {
 
       <header className="l-header" id="header">
         <nav className="nav bd-container">
-          <Link to={{ pathname: "/recipes" }} className="nav__logo">
+          <Link to={{ pathname: "/" }} className="nav__logo">
             Tasty
           </Link>
 
@@ -208,6 +207,18 @@ const Recipes = (props) => {
           </div>
         </nav>
       </header>
+      {/* {recipes.length === 0 ? (
+        <div className="noRecipes">
+          <img
+            src="empty-concept-illustration_114360-1573.jpg"
+            alt="No_image"
+            style={{
+              maxWidth: "300px",
+              margin: "7em 0em 10em 20em",
+            }}
+          />
+        </div>
+      ) : null} */}
       <CreateRecipe setRecipes={setRecipes} />
       <Grid
         container
@@ -217,7 +228,13 @@ const Recipes = (props) => {
         className={classes.grid}
       >
         {recipes.map((recipe) => {
-          return <RecipeCard recipe={recipe} key={recipe._id} />;
+          return (
+            <RecipeCard
+              recipe={recipe}
+              key={recipe._id}
+              setRecipes={setRecipes}
+            />
+          );
         })}
       </Grid>
     </>
