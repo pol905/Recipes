@@ -35,7 +35,7 @@ export default function CreateRecipe(props) {
   const [error1, setError1] = React.useState(false);
   const [error2, setError2] = React.useState(false);
   const [error3, setError3] = React.useState(false);
-  const [imgSelected, setImageSelected] = React.useState(false);
+  const [imageSelected, setImageSelected] = React.useState(false);
   const [msg1, setMsg1] = React.useState("");
   const [msg2, setMsg2] = React.useState("");
   const [msg3, setMsg3] = React.useState("");
@@ -116,7 +116,7 @@ export default function CreateRecipe(props) {
   };
 
   return (
-    <div>
+    <>
       <Button
         variant="contained"
         className={classes.button}
@@ -179,9 +179,12 @@ export default function CreateRecipe(props) {
             id="contained-button-file"
             multiple
             type="file"
-            onChange={(e) =>
-              setNewRecipe({ ...newRecipe, recipeImage: e.target.files[0] })
-            }
+            onChange={(e) => {
+              if (e.target.files) {
+                setImageSelected(true);
+                setNewRecipe({ ...newRecipe, recipeImage: e.target.files[0] });
+              }
+            }}
           />
           <label htmlFor="contained-button-file">
             <Button
@@ -193,7 +196,7 @@ export default function CreateRecipe(props) {
               Upload an Image
             </Button>
           </label>
-          {imgSelected ? null : <p>Image is required</p>}
+          {imageSelected ? null : <p>Image is required</p>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
@@ -207,6 +210,6 @@ export default function CreateRecipe(props) {
           </LoadingButton>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

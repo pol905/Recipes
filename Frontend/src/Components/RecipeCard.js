@@ -6,8 +6,8 @@ import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 import ViewRecipe from "../Components/ViewRecipe";
-import TrashIcon from "@material-ui/icons/Delete";
-import Button from "@material-ui/core/Button";
+import UpdateRecipe from "../Components/UpdateRecipe";
+
 import DeleteRecipe from "./DeleteRecipe";
 
 const useStyles = makeStyles({
@@ -30,11 +30,6 @@ export default function RecipeCard(props) {
   } = props.recipe;
   const { setRecipes } = props;
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   return (
     <Card className={classes.root} raised key={_id}>
@@ -53,6 +48,7 @@ export default function RecipeCard(props) {
       </CardContent>
       <CardActions>
         <ViewRecipe recipe={props.recipe} />
+        <UpdateRecipe recipe={props.recipe} />
         <DeleteRecipe
           recipeId={props.recipe._id}
           recipeImageName={props.recipe.img.data}
