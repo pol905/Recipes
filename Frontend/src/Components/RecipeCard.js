@@ -21,37 +21,31 @@ const useStyles = makeStyles({
 });
 
 export default function RecipeCard(props) {
-  const {
-    _id,
-    recipeName,
-    ingredients,
-    recipe,
-    img: { data, contentType },
-  } = props.recipe;
+  const [cardRecipe, setCardRecipe] = React.useState(props.recipe);
   const { setRecipes } = props;
   const classes = useStyles();
 
   return (
-    <Card className={classes.root} raised key={_id}>
+    <Card className={classes.root} raised key={cardRecipe._id}>
       <CardMedia
         className={classes.media}
         component="img"
         alt="Contemplative Reptile"
         height="140"
-        image={data}
+        image={cardRecipe.img.data}
         title="Contemplative Reptile"
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          {recipeName.replace(/['"]+/g, "")}
+          {cardRecipe.recipeName.replace(/['"]+/g, "")}
         </Typography>
       </CardContent>
       <CardActions>
-        <ViewRecipe recipe={props.recipe} />
-        <UpdateRecipe recipe={props.recipe} />
+        <ViewRecipe recipe={cardRecipe} />
+        <UpdateRecipe recipe={cardRecipe} setCardRecipe={setCardRecipe} />
         <DeleteRecipe
-          recipeId={props.recipe._id}
-          recipeImageName={props.recipe.img.data}
+          recipeId={cardRecipe._id}
+          recipeImageName={cardRecipe.img.data}
           setRecipes={setRecipes}
         />
       </CardActions>

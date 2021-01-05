@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateRecipe = (props) => {
   const classes = useStyles();
-  const { _id, recipeName, ingredients, recipe } = props.recipe;
+  const { _id, userId, recipeName, ingredients, recipe, img } = props.recipe;
+  const setCardRecipe = props.setCardRecipe;
   const [newRecipe, setNewRecipe] = React.useState({
     updatedRecipeName: recipeName,
     updatedIngredients: ingredients,
@@ -69,12 +70,23 @@ const UpdateRecipe = (props) => {
       formData.append("recipe", updatedRecipe);
     }
     try {
-      await axios.post("/v1/updateRecipe/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const finalRecipe = (
+        await axios.post("/v1/updateRecipe/", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+      ).data;
+      const newCardRecipe = {
+        _id,
+        userId,
+        recipeName: finalRecipe.recipeName || recipeName,
+        ingredients: finalRecipe.ingredients || ingredients,
+        recipe: finalRecipe.recipe || recipe,
+        img: finalRecipe.img || img,
+      };
+      setCardRecipe(newCardRecipe);
       setOpen(false);
     } catch (err) {
-      alert(err.response.data);
+      alert(err.response);
     }
     setPending(false);
   };

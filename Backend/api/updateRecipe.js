@@ -9,12 +9,11 @@ const updateRecipe = async (req, res) => {
   if (file) {
     try {
       await fs.unlink(`./uploads/${prevRecipe.img.data}`);
-      console.log("Removed old image");
     } catch (err) {
       alert("No such file");
     }
   }
-  const updatedRecipe = {
+  const newRecipe = {
     recipeName: recipeName !== prevRecipe.recipeName ? recipeName : undefined,
     ingredients:
       ingredients !== prevRecipe.ingredients ? ingredients : undefined,
@@ -27,10 +26,10 @@ const updateRecipe = async (req, res) => {
       : undefined,
   };
   try {
-    await prevRecipe.updateOne(updatedRecipe, { omitUndefined: true });
-    res.status(200).send("Added Sucessfully");
+    await prevRecipe.updateOne(newRecipe, { omitUndefined: true });
+    res.json(newRecipe);
   } catch (err) {
-    res.send("Update unsucessful");
+    res.sendStatus(400);
   }
 };
 module.exports = updateRecipe;
