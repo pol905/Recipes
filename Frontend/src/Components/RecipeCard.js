@@ -30,7 +30,7 @@ export default function RecipeCard(props) {
       <CardMedia
         className={classes.media}
         component="img"
-        alt="Contemplative Reptile"
+        alt="Recipe Image"
         height="140"
         image={cardRecipe.img.data}
         title="Contemplative Reptile"
@@ -42,12 +42,20 @@ export default function RecipeCard(props) {
       </CardContent>
       <CardActions>
         <ViewRecipe recipe={cardRecipe} />
-        <UpdateRecipe recipe={cardRecipe} setCardRecipe={setCardRecipe} />
-        <DeleteRecipe
-          recipeId={cardRecipe._id}
-          recipeImageName={cardRecipe.img.data}
-          setRecipes={setRecipes}
-        />
+        {!(
+          window.location.href.endsWith("allrecipes") ||
+          window.location.href.endsWith("allrecipes/")
+        ) ? (
+          <>
+            <UpdateRecipe recipe={cardRecipe} setCardRecipe={setCardRecipe} />,
+            <DeleteRecipe
+              recipeId={cardRecipe._id}
+              recipeImageName={cardRecipe.img.data}
+              setRecipes={setRecipes}
+            />
+            ,
+          </>
+        ) : null}
       </CardActions>
     </Card>
   );

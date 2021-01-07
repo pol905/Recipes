@@ -7,6 +7,7 @@ const getRecipes = require("./api/getRecipes");
 const getRecipe = require("./api/getRecipe");
 const deleteRecipe = require("./api/deleteRecipe");
 const updateRecipe = require("./api/updateRecipe");
+const getAllRecipes = require("./api/getAllRecipes");
 const session = require("express-session");
 const redis = require("redis");
 const RedisStore = require("connect-redis")(session);
@@ -131,6 +132,10 @@ app.post("/v1/deleteRecipe", async (req, res) => {
 
 app.post("/v1/updateRecipe", upload.single("recipeImage"), async (req, res) => {
   await updateRecipe(req, res);
+});
+
+app.get("/v1/getAllRecipes", async (req, res) => {
+  await getAllRecipes(res);
 });
 
 app.listen(port, () => {

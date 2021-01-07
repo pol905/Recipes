@@ -1,33 +1,38 @@
-import React, { useEffect, useState } from "react";
-import "../assets/css/styles.css";
-import about from "../assets/img/about.jpg";
-import home from "../assets/img/home.png";
-import ScrollReveal from "scrollreveal";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Grid } from "@material-ui/core";
+import RecipeCard from "../Components/RecipeCard";
 import Login from "../Components/Login";
 import Logout from "../Components/Logout";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
+import ScrollReveal from "scrollreveal";
+import { makeStyles } from "@material-ui/core/styles";
+import axios from "axios";
 
-const Home = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const theme = useTheme();
-  let size = useMediaQuery(theme.breakpoints.down("md"));
+const useStyles = makeStyles((theme) => ({
+  grid: {
+    marginTop: "7em",
+  },
+  button: {
+    marginTop: "14em",
+    marginLeft: "45%",
+    "@media(max-width: 500px)": {
+      marginLeft: "32%",
+    },
+  },
+}));
+
+const AllRecipes = (props) => {
+  const classes = useStyles();
+  const [recipes, setRecipes] = useState([]);
+  const { isLoggedIn } = props;
   useEffect(() => {
-    async function getSession() {
-      const cookie = await axios.get("/v1/whoami/");
-      if (cookie.data.username) {
-        {
-          setIsLoggedIn(true);
-        }
-      } else {
-        setIsLoggedIn(false);
-      }
+    async function setAllRecipes() {
+      const allRecipes = (await axios.get("/v1/getAllRecipes/")).data;
+      setRecipes(() => {
+        return [...allRecipes];
+      });
     }
-    getSession();
-  }, []);
-  useEffect(() => {
+    setAllRecipes();
     const showMenu = (toggleId, navId) => {
       const toggle = document.getElementById(toggleId),
         nav = document.getElementById(navId);
@@ -51,7 +56,6 @@ const Home = () => {
       navMenu.classList.remove("show-menu");
     }
     navLink.forEach((n) => n.addEventListener("click", linkAction));
-
     /*==================== CHANGE BACKGROUND HEADER ====================*/
     function scrollHeader() {
       const nav = document.getElementById("header");
@@ -126,7 +130,6 @@ const Home = () => {
       }
     );
   }, []);
-
   return (
     <>
       <a href="#" className="scrolltop" id="scroll-top">
@@ -148,7 +151,7 @@ const Home = () => {
               </li>
               {isLoggedIn ? (
                 <li className="nav__item">
-                  <Link to="/recipes" className="nav__link" id="">
+                  <Link to="/recipes" className="nav__link">
                     My Recipes
                   </Link>
                 </li>
@@ -159,7 +162,7 @@ const Home = () => {
                 </Link>
               </li>
               <li className="nav__item">
-                {isLoggedIn ? <Logout /> : <Login width={size} />}
+                {isLoggedIn ? <Logout /> : <Login />}
               </li>
 
               <li>
@@ -173,81 +176,25 @@ const Home = () => {
           </div>
         </nav>
       </header>
-
-      <main className="l-main">
-        <section className="home" id="home">
-          <div className="home__container bd-container bd-grid">
-            <div className="home__data">
-              <h1 className="home__title">Tasty</h1>
-              <h2 className="home__subtitle">
-                Your secret recipe is <br /> safe with us.
-              </h2>
-              <a href="#" className="button">
-                Get started
-              </a>
-            </div>
-
-            <img src={home} alt="" className="home__img" />
-          </div>
-        </section>
-
-        <section className="about section bd-container" id="about">
-          <div className="about__container  bd-grid">
-            <div className="about__data">
-              <span className="section-subtitle about__initial">About us</span>
-              <h2 className="section-title about__initial">
-                We keep
-                <br /> your secret
-              </h2>
-              <p className="about__description">
-                Your special food's recipe needs a place to be kept safe and be
-                protected. Using tasty you can categorize all your recipes safe
-                and organised in one place.
-              </p>
-              <a href="#" className="button">
-                Get started
-              </a>
-            </div>
-
-            <img src={about} alt="" className="about__img" />
-          </div>
-        </section>
-        <section className="contact section bd-container" id="contact">
-          <div className="contact__container bd-grid">
-            <div className="contact__data">
-              <span className="section-subtitle contact__initial">
-                Let's talk
-              </span>
-              <h2 className="section-title contact__initial">Contact us</h2>
-              <p className="contact__description">
-                If you want to give suggestions and feedbacks please do let us
-                know on tasty@gmail.com.
-              </p>
-            </div>
-            <div className="contact__button">
-              <a href="#" className="button">
-                Contact us now
-              </a>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer>
-        <div className="footer__content">
-          <h3 className="footer__title">Adress</h3>
-          <ul>
-            <li>RNSIT </li>
-            <li>Karnataka </li>
-            <li>BANGALORE</li>
-            <li>tasty@gmail.com</li>
-          </ul>
-        </div>
-        <p className="footer__copy">
-          &#169; 2020 SID_SUP_CODE. All right reserved
-        </p>
-      </footer>
+      <Grid
+        container
+        direction="row"
+        justifyContent="space-around"
+        alignItems="center"
+        className={classes.grid}
+      >
+        {recipes.map((recipe) => {
+          return (
+            <RecipeCard
+              recipe={recipe}
+              key={recipe._id}
+              setRecipes={setRecipes}
+            />
+          );
+        })}
+      </Grid>
     </>
   );
 };
 
-export default Home;
+export default AllRecipes;

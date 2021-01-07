@@ -54,16 +54,21 @@ export default function FormDialog() {
         } catch (err) {
           alert("Incorrect Credentials");
         }
-      } else if (username) {
-        setError2(false);
-        setText2("");
-        setError3(true);
-        setText3("password field is empty");
       } else {
-        setError2(true);
-        setText2("username field is empty");
-        setError3(false);
-        setText3("");
+        if (!username) {
+          setError2(true);
+          setText2("username field is empty");
+        } else {
+          setError2(false);
+          setText2("");
+        }
+        if (!password) {
+          setError3(true);
+          setText3("password field is empty");
+        } else {
+          setError3(false);
+          setText3("");
+        }
       }
     } else {
       const { username, password, email } = user;
@@ -83,41 +88,25 @@ export default function FormDialog() {
         }
       }
       if (!username) {
-        if (password) {
-          setError3(false);
-          setText3("");
-        }
-        if (email) {
-          setError1(false);
-          setText1("");
-        }
-
         setError2(true);
         setText2("username field is empty");
+      } else {
+        setError2(false);
+        setText2("");
       }
       if (!password) {
-        if (username) {
-          setError2(false);
-          setText2("");
-        }
-        if (email) {
-          setError1(false);
-          setText1("");
-        }
         setError3(true);
         setText3("password field is empty");
+      } else {
+        setError3(false);
+        setText3("");
       }
       if (!email) {
-        if (username) {
-          setError2(false);
-          setText2("");
-        }
-        if (password) {
-          setError2(false);
-          setText2("");
-        }
         setError1(true);
         setText1("email field is empty");
+      } else {
+        setError1(false);
+        setText1("");
       }
     }
     setPending(false);

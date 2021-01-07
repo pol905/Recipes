@@ -58,30 +58,6 @@ const Recipes = (props) => {
     }
     navLink.forEach((n) => n.addEventListener("click", linkAction));
 
-    /*==================== SCROLL SECTIONS ACTIVE LINK ====================*/
-    const sections = document.querySelectorAll("section[id]");
-
-    function scrollActive() {
-      const scrollY = window.pageYOffset;
-
-      sections.forEach((current) => {
-        const sectionHeight = current.offsetHeight;
-        const sectionTop = current.offsetTop - 50;
-        let sectionId = current.getAttribute("id");
-
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-          document
-            .querySelector(".nav__menu a[href*=" + sectionId + "]")
-            .classList?.add("active-link");
-        } else {
-          document
-            .querySelector(".nav__menu a[href*=" + sectionId + "]")
-            .classList?.remove("active-link");
-        }
-      });
-    }
-    window.addEventListener("scroll", scrollActive);
-
     /*==================== CHANGE BACKGROUND HEADER ====================*/
     function scrollHeader() {
       const nav = document.getElementById("header");
@@ -164,34 +140,29 @@ const Recipes = (props) => {
 
       <header className="l-header" id="header">
         <nav className="nav bd-container">
-          <Link to={{ pathname: "/" }} className="nav__logo">
+          <a href="/" className="nav__logo">
             Tasty
-          </Link>
+          </a>
 
           <div className="nav__menu" id="nav-menu">
             <ul className="nav__list">
               <li className="nav__item">
-                <Link to={{ pathname: "/" }} className="nav__link active-link">
+                <a href="/" className="nav__link active-link">
                   Home
-                </Link>
-              </li>
-              <li className="nav__item">
-                <Link to={{ pathname: "/#about" }} className="nav__link">
-                  About
-                </Link>
-              </li>
-              <li className="nav__item">
-                <Link to={{ pathname: "/#contact" }} className="nav__link">
-                  Contact us
-                </Link>
+                </a>
               </li>
               {isLoggedIn ? (
                 <li className="nav__item">
-                  <Link to={{ pathname: "/recipes" }} className="nav__link">
+                  <a href="/recipes" className="nav__link">
                     My Recipes
-                  </Link>
+                  </a>
                 </li>
               ) : null}
+              <li className="nav__item">
+                <a href="/allrecipes" className="nav__link">
+                  All Recipes
+                </a>
+              </li>
               <li className="nav__item">
                 {isLoggedIn ? <Logout /> : <Login />}
               </li>
@@ -207,18 +178,6 @@ const Recipes = (props) => {
           </div>
         </nav>
       </header>
-      {/* {recipes.length === 0 ? (
-        <div className="noRecipes">
-          <img
-            src="empty-concept-illustration_114360-1573.jpg"
-            alt="No_image"
-            style={{
-              maxWidth: "300px",
-              margin: "7em 0em 10em 20em",
-            }}
-          />
-        </div>
-      ) : null} */}
       <CreateRecipe setRecipes={setRecipes} />
       <Grid
         container

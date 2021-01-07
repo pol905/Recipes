@@ -174,7 +174,7 @@ export default function CreateRecipe(props) {
             }
           />
           <input
-            accept="image/*"
+            accept=".jpeg, .png, .jpg"
             className={classes.input}
             id="contained-button-file"
             multiple

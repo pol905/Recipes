@@ -100,7 +100,7 @@ const UpdateRecipe = (props) => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Add New Recipe</DialogTitle>
+        <DialogTitle id="form-dialog-title">Edit Recipe</DialogTitle>
         <DialogContent>
           <TextField
             required
@@ -147,7 +147,7 @@ const UpdateRecipe = (props) => {
             }
           />
           <input
-            accept="image/*"
+            accept=".jpeg, .png, .jpg"
             className={classes.input}
             id="contained-button-file"
             multiple
