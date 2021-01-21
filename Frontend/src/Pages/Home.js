@@ -180,11 +180,8 @@ const Home = () => {
             <div className="home__data">
               <h1 className="home__title">Tasty</h1>
               <h2 className="home__subtitle">
-                Your secret recipe is <br /> safe with us.
+                Share your recipes <br /> also explore new ones.
               </h2>
-              <a href="#" className="button">
-                Get started
-              </a>
             </div>
 
             <img src={home} alt="" className="home__img" />
@@ -197,16 +194,14 @@ const Home = () => {
               <span className="section-subtitle about__initial">About us</span>
               <h2 className="section-title about__initial">
                 We keep
-                <br /> your secret
+                <br /> your recipes
               </h2>
               <p className="about__description">
-                Your special food's recipe needs a place to be kept safe and be
-                protected. Using tasty you can categorize all your recipes safe
-                and organised in one place.
+                Your special food's recipe needs a place to be stored and shared
+                with other food lovers. Using tasty ou can categorize all your
+                recipes and also explore more variety of foods others want to
+                share all in a place.
               </p>
-              <a href="#" className="button">
-                Get started
-              </a>
             </div>
 
             <img src={about} alt="" className="about__img" />
@@ -221,31 +216,30 @@ const Home = () => {
               <h2 className="section-title contact__initial">Contact us</h2>
               <p className="contact__description">
                 If you want to give suggestions and feedbacks please do let us
-                know on tasty@gmail.com.
+                know.
               </p>
             </div>
             <div className="contact__button">
-              <a href="#" className="button">
+              <a href="mailto:exampleemail@gmail.com" className="button">
                 Contact us now
               </a>
             </div>
           </div>
         </section>
+        <section className="contact section bd-container" id="contact">
+          <div className="contact__container bd-grid">
+            <div className="contact__data">
+              <h2 className="section-title contact__initial">Address</h2>
+              <p>
+                RNSIT <br />
+                Karnataka
+                <br />
+                BANGALORE-560078
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer>
-        <div className="footer__content">
-          <h3 className="footer__title">Adress</h3>
-          <ul>
-            <li>RNSIT </li>
-            <li>Karnataka </li>
-            <li>BANGALORE</li>
-            <li>tasty@gmail.com</li>
-          </ul>
-        </div>
-        <p className="footer__copy">
-          &#169; 2020 SID_SUP_CODE. All right reserved
-        </p>
-      </footer>
     </>
   );
 };

@@ -17,12 +17,10 @@ const fs = require("fs-extra");
 const logout = require("./api/logout");
 require("dotenv").config();
 
-console.log(__dirname);
-
 let redisClient = redis.createClient({
   host: "localhost",
   port: process.env.REDIS_PORT,
-});
+}); // Connects to a redis instance running on host:port
 
 redisClient.on("error", (err) => {
   console.log("Could not connect!");
@@ -34,8 +32,9 @@ redisClient.on("connect", (err) => {
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
-app.use(express.static(__dirname + "\\uploads"));
+app.use(express.static(__dirname + "\\uploads")); // Exposing all static images uploaded by a user
 app.use(
+  // Creating a session Object which gets stored in redis memorystore
   session({
     name: "sess",
     store: new RedisStore({ client: redisClient, disableTouch: true }),
@@ -46,7 +45,7 @@ app.use(
       sameSite: "lax",
     },
     saveUninitialized: false,
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET, // Security Key
     resave: false,
     unset: "destroy",
   })
@@ -57,11 +56,13 @@ app.use(express.urlencoded({ extended: true }));
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
+    //  sets the location for uploaded images
     const uploadPath = path.join(__dirname, "/uploads");
     fs.ensureDirSync(uploadPath);
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
+    // creates a date seperated filename for images that are uploaded
     cb(
       null,
       new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
@@ -74,6 +75,7 @@ const fileTypeHandler = () => {
 };
 
 const filefilter = (req, file, cb) => {
+  // filters only specify image types
   flag = 0;
   if (
     file.mimetype === "image/jpeg" ||
@@ -86,9 +88,11 @@ const filefilter = (req, file, cb) => {
   }
 };
 const upload = multer({
+  // Creates a multer instance which can be used to handle file data in FormData
   fileFilter: filefilter,
   storage: storage,
   limits: {
+    // Specifies Max File Size
     fileSize: 1024 * 1024 * 5,
   },
 });

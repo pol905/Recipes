@@ -58,7 +58,7 @@ const DialogActions = withStyles((theme) => ({
 
 export default function ViewRecipe(props) {
   const [open, setOpen] = React.useState(false);
-  const { recipeName, ingredients, recipe } = props.recipe;
+  const { recipeName, ingredients, recipe } = props.recipe; // Receives recipe attributes from parent component
   const handleClickOpen = () => {
     setOpen(true);
   };

@@ -3,7 +3,6 @@ import { Grid } from "@material-ui/core";
 import RecipeCard from "../Components/RecipeCard";
 import Login from "../Components/Login";
 import Logout from "../Components/Logout";
-import { Link } from "react-router-dom";
 import ScrollReveal from "scrollreveal";
 import { makeStyles } from "@material-ui/core/styles";
 import CreateRecipe from "../Components/CreateRecipe";
@@ -24,9 +23,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Recipes = (props) => {
   const classes = useStyles();
-  const [recipes, setRecipes] = useState([]);
-  const { isLoggedIn } = props;
+  const [recipes, setRecipes] = useState([]); // state element to hold all recipes
+  const { isLoggedIn } = props; // checks if a user is loggedIn
   useEffect(() => {
+    // Fetching all the user recipes
     async function setAllRecipes() {
       const allRecipes = await fetchRecipes();
       setRecipes(() => {
@@ -34,6 +34,7 @@ const Recipes = (props) => {
       });
     }
     setAllRecipes();
+
     const showMenu = (toggleId, navId) => {
       const toggle = document.getElementById(toggleId),
         nav = document.getElementById(navId);
@@ -178,6 +179,7 @@ const Recipes = (props) => {
           </div>
         </nav>
       </header>
+
       <CreateRecipe setRecipes={setRecipes} />
       <Grid
         container

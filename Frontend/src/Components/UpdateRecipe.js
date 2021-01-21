@@ -103,7 +103,6 @@ const UpdateRecipe = (props) => {
         <DialogTitle id="form-dialog-title">Edit Recipe</DialogTitle>
         <DialogContent>
           <TextField
-            required
             autoFocus
             margin="dense"
             id="recipeName"
@@ -118,7 +117,6 @@ const UpdateRecipe = (props) => {
             }
           />
           <TextField
-            required
             id="outlined-textarea"
             label="Ingredients"
             placeholder="Enter the ingredients..."
@@ -133,7 +131,6 @@ const UpdateRecipe = (props) => {
             }
           />
           <TextField
-            required
             id="outlined-textarea"
             label="Recipe"
             placeholder="Enter the recipe..."

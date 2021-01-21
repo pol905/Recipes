@@ -40,13 +40,13 @@ export default function CreateRecipe(props) {
   const [msg2, setMsg2] = React.useState("");
   const [msg3, setMsg3] = React.useState("");
 
-  const { setRecipes } = props;
+  const { setRecipes } = props; // Setter function to update recipe  state variable
   const [newRecipe, setNewRecipe] = React.useState({
     recipeName: "",
     ingredients: "",
     recipe: "",
     recipeImage: null,
-  });
+  }); // State variable to hold new Recipe
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -68,24 +68,34 @@ export default function CreateRecipe(props) {
       setMsg3("");
       setImageSelected(false);
       setPending(true);
+      // Populate the FormData with recipe Details
       formData.append("recipeImage", recipeImage, recipeImage.name);
       formData.append("recipeName", recipeName);
       formData.append("recipe", recipe);
       formData.append("ingredients", ingredients);
       try {
+        // Adding a new Recipe to our database
         await axios.post("/v1/addRecipe/", formData, {
           headers: { "Content-Type": "multipart/form-data" },
         });
       } catch (err) {
+        // If unsuccessful alerts user
         alert(err.response.data);
       }
       const allRecipes = await fetchRecipes();
       setRecipes(() => {
         return [...allRecipes];
       });
+      setNewRecipe({
+        recipeName: "",
+        ingredients: "",
+        recipe: "",
+        recipeImage: null,
+      }); // Clear new Recipe Fields after successfully POSTing to your backend
       setPending(false);
       setOpen(false);
     } else {
+      // Form Validation
       if (!recipeName) {
         setError1(true);
         setMsg1("Enter the name of the recipe");
@@ -114,8 +124,8 @@ export default function CreateRecipe(props) {
       }
     }
   };
-
   return (
+    // HTML Content
     <>
       <Button
         variant="contained"
